@@ -1,0 +1,82 @@
+set -x
+
+#Remove required software
+dnf remove httpd 
+
+read -n 1 -s
+
+dnf remove -y dhcp-server 
+
+read -n 1 -s
+
+dnf remove -y tftp-server
+
+read -n 1 -s
+
+# Deconfigure grub
+#grub2-mknetdir --net-directory=/var/lib/tftpboot
+#
+#read -n 1 -s
+
+rm /var/lib/tftpboot/boot/grub2/grub.cfg
+
+read -n 1 -s
+
+# Deconfigure dhcp
+rm /etc/dhcp/dhcpd.conf
+
+read -n 1 -s
+
+
+# Disable 
+systemctl disable dhcpd --now
+
+read -n 1 -s
+
+systemctl disable tftp --now
+read -n 1 -s
+
+systemctl disable httpd --now
+read -n 1 -s
+
+cd /var/lib/tftpboot
+rm rhcos-4.14.15-ppc64le-live-initramfs.ppc64le.img
+read -n 1 -s
+
+rm rhcos-4.14.15-ppc64le-live-kernel-ppc64le
+read -n 1 -s
+
+cd /var/www/html
+read -n 1 -s
+
+rm rhcos-4.14.15-ppc64le-live-rootfs.ppc64le.img
+read -n 1 -s
+
+
+mkdir -p ~/sno-work
+cd ~/sno-work
+rm ./install-config.yaml
+read -n 1 -s
+
+
+# Remove the client
+rm ./openshift-client-linux-4.14.30.tar.gz
+read -n 1 -s
+
+
+rm ./openshift-install-linux-4.14.30.tar.gz
+read -n 1 -s
+
+
+# ./openshift-install create single-node-ignition-config
+# read -n 1 -s
+
+
+rm bootstrap-in-place-for-live-iso.ign
+read -n 1 -s
+
+
+rm /var/www/html/bootstrap-in-place-for-live-iso.ign 
+read -n 1 -s
+
+

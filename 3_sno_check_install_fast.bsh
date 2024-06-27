@@ -1,0 +1,30 @@
+set -x
+#####################
+# Post installation #
+#####################
+
+# Check the installation status 
+export KUBECONFIG=/root/sno-work/auth/kubeconfig
+
+oc whoami
+
+
+oc get nodes
+
+
+oc get clusterversion
+
+
+oc get clusteroperator
+
+
+oc get pods -A
+
+
+# Find the kubeadmin password
+cat /root/sno-work/auth/kubeadmin-password
+
+
+# Find the console url
+oc get routes -n openshift-console
+

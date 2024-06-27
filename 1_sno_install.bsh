@@ -1,0 +1,94 @@
+set -x
+# Requires the following four files
+# ~/dhcpd_config
+# ~/grub_config
+# ~/install-config.yaml_config
+# ~/boot.tar.gz
+
+cd
+#Install required software
+dnf install -y httpd
+read -n 1 -s
+
+dnf install -y dhcp-server
+read -n 1 -s
+
+dnf install -y tftp-server
+read -n 1 -s
+
+# Configure grub
+#cp boot.tar.gz /var/lib/tftpboot/
+#cd /var/lib/tftpboot
+#tar -xvf boot.tar.gz
+#cd
+
+grub2-mknetdir --net-directory=/var/lib/tftpboot
+read -n 1 -s
+
+cp ~/grub_config /var/lib/tftpboot/boot/grub2/grub.cfg
+read -n 1 -s
+
+cat /var/lib/tftpboot/boot/grub2/grub.cfg
+read -n 1 -s
+
+# Configure dhcp
+cp ~/dhcp_config /etc/dhcp/dhcpd.conf
+cat /etc/dhcp/dhcpd.conf
+read -n 1 -s
+
+# Start the services
+systemctl enable dhcpd --now
+read -n 1 -s
+
+systemctl enable tftp --now
+read -n 1 -s
+
+systemctl enable httpd --now
+read -n 1 -s
+
+export RHCOS_URL=https://mirror.openshift.com/pub/openshift-v4/ppc64le/dependencies/rhcos/4.14/latest/
+read -n 1 -s
+
+cd /var/lib/tftpboot
+wget https://mirror.openshift.com/pub/openshift-v4/ppc64le/dependencies/rhcos/4.14/4.14.15/rhcos-4.14.15-ppc64le-live-initramfs.ppc64le.img
+read -n 1 -s
+
+wget https://mirror.openshift.com/pub/openshift-v4/ppc64le/dependencies/rhcos/4.14/4.14.15/rhcos-4.14.15-ppc64le-live-kernel-ppc64le
+read -n 1 -s
+
+cd /var/www/html
+read -n 1 -s
+
+wget https://mirror.openshift.com/pub/openshift-v4/ppc64le/dependencies/rhcos/4.14/4.14.15/rhcos-4.14.15-ppc64le-live-rootfs.ppc64le.img
+read -n 1 -s
+
+mkdir -p ~/sno-work
+cd ~/sno-work
+cp ~/install-config.yaml_config ./install-config.yaml
+cat ./install-config.yaml
+read -n 1 -s
+
+cp install-config.yaml install-config.yaml.bup
+read -n 1 -s
+
+# Open a browser tab to https://mirror.openshift.com/pub/openshift-v4/ppc64le/clients/ocp/stable-4.14/
+
+# dowload the client
+wget https://mirror.openshift.com/pub/openshift-v4/ppc64le/clients/ocp/stable-4.14/openshift-client-linux-4.14.30.tar.gz
+read -n 1 -s
+
+wget https://mirror.openshift.com/pub/openshift-v4/ppc64le/clients/ocp/stable-4.14/openshift-install-linux-4.14.30.tar.gz
+read -n 1 -s
+
+tar -xvf openshift-install-linux-4.14.30.tar.gz
+read -n 1 -s
+
+./openshift-install create single-node-ignition-config
+read -n 1 -s
+
+chmod 644 bootstrap-in-place-for-live-iso.ign
+read -n 1 -s
+
+cp bootstrap-in-place-for-live-iso.ign /var/www/html/
+read -n 1 -s
+

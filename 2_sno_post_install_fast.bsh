@@ -1,0 +1,15 @@
+set -x
+cd ~/sno-work
+
+
+tar -xvf openshift-client-linux-4.14.30.tar.gz
+
+
+cp oc kubectl /bin/
+
+
+mkdir /root/.kube
+cp auth/kubeconfig /root/.kube/config
+
+ 
+# Reference # https://access.redhat.com/documentation/en-us/openshift_container_platform/4.5/html/installing_on_rhv/cli-logging-in-kubeadmin_installing-rhv-default
