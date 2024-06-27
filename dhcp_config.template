@@ -1,0 +1,30 @@
+default-lease-time 900;
+max-lease-time 7200;
+subnet <SUBNET> netmask <NETMASK> {
+        option routers <GATEWAY>;
+        option subnet-mask <NETMASK>;
+        option domain-search "<BASE-DOMAIN>";
+        option domain-name-servers <NAMESERVER>;
+        next-server <BOOTSTRAP>;
+        filename "boot/grub2/powerpc-ieee1275/core.elf";
+}
+
+allow bootp;
+option conf-file code 209 = text;
+host bootstrap {
+        hardware ethernet <MASTER_MAC>;
+        fixed-address <MASTER_IP>;
+        option host-name <MASTER ALIAS EXAMPLE "master-0.p1224.cecc.ihost.com">;
+        allow booting;
+}
+
+# Update subnet from project kit
+# Update netmask from project kit
+# Update gateway from project kit
+# Update subnet-mask from project kit
+# Update domain from project kit
+# Update nameservers from project kit
+# Update next-server (bootstrap IP) from project kit
+# Update MAC address with master-0 MAC from project kit
+# Update fixed-address with bastion IP (using master-o lpar with bastion ip)
+# So we are going to install SNO on master-0 with bastion IP?

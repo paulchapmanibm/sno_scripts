@@ -1,0 +1,11 @@
+if [ ${net_default_mac} == <MASTER_MAC> ]; then
+default=0
+fallback=1
+timeout=1
+menuentry "Bootstrap CoreOS (BIOS)" {
+echo "Loading kernel Bootstrap"
+linux "/rhcos-4.14.15-ppc64le-live-kernel-ppc64le" rd.neednet=1 ip=<MASTER_IP>::<GATEWAY>:<NETMASK>:<MASTER_ALIAS>::none nameserver=<NAMESERVER#1> nameserver=<NAMESERVER#2> console=hvc0 ignition.firstboot ignition.platform.id=metal coreos.live.rootfs_url=http://<BOOTSTRAP>/rhcos-4.14.15-ppc64le-live-rootfs.ppc64le.img ignition.config.url=http://<BOOTSTRAP>/bootstrap-in-place-for-live-iso.ign
+echo "Loading initrd"
+initrd "/rhcos-4.14.15-ppc64le-live-initramfs.ppc64le.img"
+}
+fi
